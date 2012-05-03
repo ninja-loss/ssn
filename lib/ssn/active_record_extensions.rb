@@ -56,7 +56,7 @@ module Ssn
 
         define_method "raw_#{str}=" do |value|
           return if ssn_value_considered_blank?( value )
-          super
+          super( value )
         end
       end
       private :initialize_has_ssn_from_string
