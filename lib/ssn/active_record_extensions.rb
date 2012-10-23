@@ -50,13 +50,15 @@ module Ssn
         end
 
         define_method "#{str}=" do |value|
-          return if ssn_value_considered_blank?( value )
-          self.send "raw_#{str}=", value.gsub( /-/, "" )
+          if ssn_value_considered_blank?( value )
+            self.send "raw_#{str}=", nil
+          else
+            self.send "raw_#{str}=", value.gsub( /-/, "" )
+          end
         end
 
         define_method "raw_#{str}=" do |value|
-          return if ssn_value_considered_blank?( value )
-          super( value )
+          super ssn_value_considered_blank?( value ) ? nil : value
         end
       end
       private :initialize_has_ssn_from_string
@@ -67,6 +69,8 @@ module Ssn
 
       def considered_blank_ssns
         [
+          nil,
+          '',
           '000000000',
           '000-00-0000'
         ]
